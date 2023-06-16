@@ -1,5 +1,6 @@
 # CETL
 These scripts: 
+
 0. Check which records are created, updated or deleted.
 1. Extract metadata from a collection management system.
 2. Transform data into RDF
