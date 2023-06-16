@@ -13,6 +13,17 @@ Other example: for ORCID it creates a list of all the relevant ORCIDs, Extracts 
 ## Pattern
 The pipeline is managed through a database 'status.db' with identifiers needed to download the records identified with these identifiers. The check-step finds the newly created, updated or deleted identifiers, stores the status of the processing and the timestamps of the moments the record is checked, extracted, transformed and loaded.
 
+## Prerequisites
+The scripts run in Python3 and need the following libraries:
+- sqlite3
+- os
+- datetime
+- pathlib
+- csv
+- json
+- requests
+- Sickle (OAI-PMH library)
+
 ## Check
 The check script creates and updates the list of identifiers to be downloaded, for instance with the OAI-PMH verb ListIdentifiers. 
 
