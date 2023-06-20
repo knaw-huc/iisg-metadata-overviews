@@ -2,6 +2,6 @@
 __pycache__/
 
 # Data
-status.db
+*/status.db
 extracted/
 transformed/
