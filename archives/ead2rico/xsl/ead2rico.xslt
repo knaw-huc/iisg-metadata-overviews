@@ -9,7 +9,6 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-    xmlns:schema="http://schema.org/"
     xmlns:rico="https://www.ica.org/standards/RiC/ontology#"
     xmlns:ead="urn:isbn:1-931666-22-9" 
     exclude-result-prefixes="xsl ead">
@@ -17,7 +16,7 @@
 <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 <xsl:strip-space elements="*"/>
 
-<xsl:param name="baseUri">https://example.com/</xsl:param>
+<xsl:param name="baseUri">https://hdl.handle.net/10622/</xsl:param>
 
 <!-- RDF wrap, looping hierarchy -->
 <xsl:template match="ead:ead">
@@ -31,7 +30,7 @@
     <rico:RecordSet>
         <xsl:attribute name="rdf:about">
             <xsl:value-of select="$baseUri"/>
-            <xsl:value-of select="ead:did/ead:unitid/@identifier"/>
+            <xsl:value-of select="concat(ead:did/ead:unitid, '#')"/>
         </xsl:attribute>
         <xsl:apply-templates select="ead:did"/>
         <xsl:call-template name="set-recordsettype">
@@ -39,43 +38,29 @@
         </xsl:call-template>
     </rico:RecordSet>
     <xsl:apply-templates select="ead:dsc">
-        <xsl:with-param name="archnr" select="ead:did/ead:unitid"/>
-        <xsl:with-param name="id" select="ead:did/ead:unitid/@identifier"/>
+        <xsl:with-param name="archnr" select="concat(ead:did/ead:unitid, '#')"/>
     </xsl:apply-templates>
 </xsl:template>
 
 <xsl:template match="ead:dsc">
     <xsl:param name="archnr"/>
-    <xsl:param name="id"/>
     <xsl:apply-templates select="ead:c | ead:c01">
         <xsl:with-param name="archnr" select="$archnr"/>
-        <xsl:with-param name="id" select="$id"/>
     </xsl:apply-templates>
 </xsl:template>
 
 <xsl:template match="ead:c | ead:c01 | ead:c02 | ead:c03 | ead:c04 | ead:c05 | ead:c06 | ead:c07 | ead:c08 | ead:c09 | ead:c10 | ead:c11 | ead:c12">
     <xsl:param name="archnr"/>
-    <xsl:param name="id"/>
     <rico:RecordSet>
         <xsl:attribute name="rdf:about">
             <xsl:value-of select="$baseUri"/>
-            <xsl:value-of select="ead:did/ead:unitid/@identifier"/>
+            <xsl:value-of select="replace(concat($archnr, ead:did/ead:unitid), ' ', '')"/>
         </xsl:attribute>
         <rico:isOrWasIncludedIn>
-            <xsl:choose>
-                <xsl:when test="../../@level='fonds'">        
-                    <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="$baseUri"/>
-                        <xsl:value-of select="$id"/>
-                    </xsl:attribute>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:attribute name="rdf:resource">
-                        <xsl:value-of select="$baseUri"/>
-                        <xsl:value-of select="../ead:did/ead:unitid/@identifier"/>
-                    </xsl:attribute>
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:attribute name="rdf:resource">
+                <xsl:value-of select="$baseUri"/>
+                <xsl:value-of select="$archnr"/>
+            </xsl:attribute>
         </rico:isOrWasIncludedIn>
         <xsl:call-template name="set-recordsettype">
             <xsl:with-param name="type" select="@level"/>
@@ -85,8 +70,7 @@
         </xsl:apply-templates>
     </rico:RecordSet>
     <xsl:apply-templates select="ead:c | ead:c01 | ead:c02 | ead:c03 | ead:c04 | ead:c05 | ead:c06 | ead:c07 | ead:c08 | ead:c09 | ead:c10 | ead:c11 | ead:c12">
-        <xsl:with-param name="archnr" select="$archnr"/>
-        <xsl:with-param name="id" select="$id"/>
+        <xsl:with-param name="archnr" select="replace(concat($archnr, ead:did/ead:unitid), ' ', '')"/>
     </xsl:apply-templates>
 </xsl:template>
 
@@ -115,18 +99,6 @@
             </xsl:call-template>
         </rico:Identifier>
     </rico:hasOrHadIdentifier>
-    <rico:hasOrHadIdentifier>
-        <rico:Identifier>
-            <rico:textualValue>
-                <xsl:value-of select="@identifier"/>
-            </rico:textualValue>
-            <rico:hasIdentifierType>
-                <rico:IdentifierType>
-                    <rico:name>id</rico:name>
-                </rico:IdentifierType>
-            </rico:hasIdentifierType>
-        </rico:Identifier>
-    </rico:hasOrHadIdentifier>
 </xsl:template>
 
 <xsl:template match="ead:unittitle">
@@ -137,9 +109,6 @@
             </rico:textualValue>
         </rico:Title>
     </rico:hasOrHadTitle>
-    <rdfs:label>
-        <xsl:value-of select="normalize-space(.)"/>
-    </rdfs:label>
 </xsl:template>
 
 <xsl:template match="ead:unitdate">
