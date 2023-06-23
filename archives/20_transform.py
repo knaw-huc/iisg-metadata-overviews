@@ -3,10 +3,12 @@
 from pathlib import Path
 from saxonche import PySaxonProcessor
 
-testamount = 3
+testamount = 0
+
+# TODO: base handling on status.db instead of the availability of the file in extracted!!! 
 
 xsltproc = PySaxonProcessor(license=False).new_xslt30_processor()
-executable = xsltproc.compile_stylesheet(stylesheet_file="rico-converter/ricoconverter/ricoconverter-convert/src/main/resources/xslt_ead/main.xslt")
+executable = xsltproc.compile_stylesheet(stylesheet_file="ead2rico/xsl/ead2rico.xslt")
 
 src_path = Path("extracted")
 for src_file in src_path.glob("**/*.xml"):
