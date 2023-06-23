@@ -1,5 +1,9 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled
 __pycache__/
+
+# Other gitrepo's
+archives/rico-converter/
+biblio/marc2bibframe2/
 
 # Data
 */status.db

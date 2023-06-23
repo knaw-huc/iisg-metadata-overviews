@@ -24,6 +24,10 @@ The scripts run in Python3 and need the following libraries:
 - requests
 - Sickle (OAI-PMH library)
 
+Other git repo's with code needed to run the cetls:
+- rico-converter
+- marc2bibframe2
+
 ## Check
 The check script creates and updates the list of identifiers to be downloaded, for instance with the OAI-PMH verb ListIdentifiers. 
 
