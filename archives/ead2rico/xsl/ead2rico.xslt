@@ -18,27 +18,32 @@
 
 <xsl:param name="baseUri">https://hdl.handle.net/10622/</xsl:param>
 
-<!-- RDF wrap, looping hierarchy -->
+<!-- RDF wrap -->
 <xsl:template match="ead:ead">
     <rdf:RDF>
+        <!--xsl:apply-templates select="ead:eadheader"/-->
         <xsl:apply-templates select="ead:archdesc"/>
     </rdf:RDF>
 </xsl:template>
 
-<!-- creating subjects -->
+<!-- templates for eadheader -->
+<!-- TODO -->
+
+<!-- templates for archdesc-components, looping hierarchy -->
 <xsl:template match="ead:archdesc">
     <rico:RecordSet>
         <xsl:attribute name="rdf:about">
             <xsl:value-of select="$baseUri"/>
-            <xsl:value-of select="concat(ead:did/ead:unitid, '#')"/>
+            <xsl:value-of select="ead:did/ead:unitid"/>
         </xsl:attribute>
         <xsl:apply-templates select="ead:did"/>
+        <xsl:apply-templates select="ead:scopecontent | ead:accessrestrict | ead:controlaccess | ead:odd"/>
         <xsl:call-template name="set-recordsettype">
             <xsl:with-param name="type" select="@level"/>
         </xsl:call-template>
     </rico:RecordSet>
     <xsl:apply-templates select="ead:dsc">
-        <xsl:with-param name="archnr" select="concat(ead:did/ead:unitid, '#')"/>
+        <xsl:with-param name="archnr" select="ead:did/ead:unitid"/>
     </xsl:apply-templates>
 </xsl:template>
 
@@ -46,15 +51,27 @@
     <xsl:param name="archnr"/>
     <xsl:apply-templates select="ead:c | ead:c01">
         <xsl:with-param name="archnr" select="$archnr"/>
+        <xsl:with-param name="level" select="'first'"/>
     </xsl:apply-templates>
 </xsl:template>
 
 <xsl:template match="ead:c | ead:c01 | ead:c02 | ead:c03 | ead:c04 | ead:c05 | ead:c06 | ead:c07 | ead:c08 | ead:c09 | ead:c10 | ead:c11 | ead:c12">
     <xsl:param name="archnr"/>
+    <xsl:param name="level"/>
+    <xsl:variable name="id">
+        <xsl:choose>
+            <xsl:when test="$level = 'first'">
+                <xsl:value-of select="concat(concat($archnr, '#'), position())"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="concat(concat($archnr, '-'), position())"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
     <rico:RecordSet>
         <xsl:attribute name="rdf:about">
             <xsl:value-of select="$baseUri"/>
-            <xsl:value-of select="replace(concat($archnr, ead:did/ead:unitid), ' ', '')"/>
+            <xsl:value-of select="$id"/>
         </xsl:attribute>
         <rico:isOrWasIncludedIn>
             <xsl:attribute name="rdf:resource">
@@ -68,15 +85,14 @@
         <xsl:apply-templates select="ead:did">
             <xsl:with-param name="type" select="@level"/>
         </xsl:apply-templates>
+        <xsl:apply-templates select="ead:scopecontent | ead:accessrestrict | ead:controlaccess | ead:odd"/>
     </rico:RecordSet>
     <xsl:apply-templates select="ead:c | ead:c01 | ead:c02 | ead:c03 | ead:c04 | ead:c05 | ead:c06 | ead:c07 | ead:c08 | ead:c09 | ead:c10 | ead:c11 | ead:c12">
-        <xsl:with-param name="archnr" select="replace(concat($archnr, ead:did/ead:unitid), ' ', '')"/>
+        <xsl:with-param name="archnr" select="$id"/>
     </xsl:apply-templates>
 </xsl:template>
 
-<!-- creating predicates and objects -->
-<!-- very preliminary mapping, created in my learning-by-doing way of working! -->
-<!-- super minimal: only four basic fields, most important in Dutch Archival Culture -->
+<!-- templates for did elements -->
 <xsl:template match="ead:did">
     <xsl:param name="type"/>
     <xsl:apply-templates select="ead:unitid">
@@ -85,6 +101,9 @@
     <xsl:apply-templates select="ead:unittitle"/>
     <xsl:apply-templates select="ead:unitdate"/>
     <xsl:apply-templates select="ead:physdesc"/>
+    <xsl:apply-templates select="ead:origination"/>
+    <xsl:apply-templates select="ead:langmaterial"/>
+    <xsl:apply-templates select="ead:repository"/>
 </xsl:template>
 
 <xsl:template match="ead:unitid">
@@ -115,7 +134,7 @@
     <rico:isAssociatedWithDate>
         <rico:DateRange>
             <rico:expressedDate>
-                <xsl:value-of select="."/>
+                <xsl:value-of select="normalize-space(.)"/>
             </rico:expressedDate>
         </rico:DateRange>
     </rico:isAssociatedWithDate>
@@ -123,8 +142,64 @@
 
 <xsl:template match="ead:physdesc">
     <rico:recordResourceExtent>
-        <xsl:value-of select="."/>
+        <xsl:value-of select="normalize-space(.)"/>
     </rico:recordResourceExtent>
+</xsl:template>
+
+<xsl:template match="ead:origination">
+    <rico:hasAccumulator>
+        <xsl:value-of select="normalize-space(.)"/>
+    </rico:hasAccumulator>
+</xsl:template>
+
+<xsl:template match="ead:repository">
+    <rico:hasOrHadHolder>
+        <xsl:apply-templates/>
+    </rico:hasOrHadHolder>
+</xsl:template>
+
+<xsl:template match="ead:address"/>
+
+<xsl:template match="ead:langmaterial">
+    <rico:hasOrHadSomeMembersWithLanguage>
+        <rico:Language>
+            <xsl:attribute name="rdf:about">
+                <xsl:text>http://id.loc.gov/vocabulary/iso639-2/</xsl:text>
+                <xsl:value-of select="ead:language/@langcode"/>
+            </xsl:attribute>            
+        </rico:Language>
+    </rico:hasOrHadSomeMembersWithLanguage>
+</xsl:template>
+
+<!-- templates for non-did elements -->
+<xsl:template match="ead:scopecontent">
+    <rico:scopeAndContent>
+        <xsl:apply-templates/>
+    </rico:scopeAndContent>
+</xsl:template>
+
+<xsl:template match="ead:accessrestrict">
+    <rico:conditionsOfAccess>
+        <xsl:apply-templates/>
+    </rico:conditionsOfAccess>
+</xsl:template>
+
+<xsl:template match="ead:controlaccess">
+    <rico:hasOrHadSubject>
+        <xsl:apply-templates/>
+    </rico:hasOrHadSubject>
+</xsl:template>
+
+<xsl:template match="ead:odd">
+    <rico:descriptiveNote>
+        <xsl:apply-templates/>
+    </rico:descriptiveNote>
+</xsl:template>
+
+<xsl:template match="ead:head"/>
+
+<xsl:template match="ead:p">
+    <xsl:value-of select="normalize-space(.)"/>
 </xsl:template>
 
 <!-- named templates -->
