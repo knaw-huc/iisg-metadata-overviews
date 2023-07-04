@@ -148,7 +148,7 @@
 
 <xsl:template match="ead:origination">
     <rico:hasAccumulator>
-        <xsl:value-of select="normalize-space(.)"/>
+        <xsl:apply-templates/>
     </rico:hasAccumulator>
 </xsl:template>
 
@@ -157,8 +157,6 @@
         <xsl:apply-templates/>
     </rico:hasOrHadHolder>
 </xsl:template>
-
-<xsl:template match="ead:address"/>
 
 <xsl:template match="ead:langmaterial">
     <rico:hasOrHadSomeMembersWithLanguage>
@@ -196,11 +194,102 @@
     </rico:descriptiveNote>
 </xsl:template>
 
-<xsl:template match="ead:head"/>
+<!-- templates for names of agents, places and subjects -->
+<xsl:template match="ead:persname">
+    <rico:Person>
+        <xsl:if test="starts-with(@authfilenumber, 'http')">
+            <xsl:attribute name="rdf:about">
+                <xsl:value-of select="@authfilenumber"/>
+            </xsl:attribute>
+        </xsl:if>
+        <rico:hasOrHadAgentName>
+            <rico:AgentName>
+                <rico:textualValue>
+                    <xsl:value-of select="normalize-space(.)"/>
+                </rico:textualValue>
+            </rico:AgentName>
+        </rico:hasOrHadAgentName>
+    </rico:Person>
+</xsl:template>
 
+<xsl:template match="ead:corpname">
+    <rico:CorporateBody>
+        <xsl:if test="starts-with(@authfilenumber, 'http')">
+            <xsl:attribute name="rdf:about">
+                <xsl:value-of select="@authfilenumber"/>
+            </xsl:attribute>
+        </xsl:if>
+        <rico:hasOrHadAgentName>
+            <rico:AgentName>
+                <rico:textualValue>
+                    <xsl:value-of select="normalize-space(.)"/>
+                </rico:textualValue>
+            </rico:AgentName>
+        </rico:hasOrHadAgentName>
+    </rico:CorporateBody>
+</xsl:template>
+
+<xsl:template match="ead:famname">
+    <rico:Family>
+        <xsl:if test="starts-with(@authfilenumber, 'http')">
+            <xsl:attribute name="rdf:about">
+                <xsl:value-of select="@authfilenumber"/>
+            </xsl:attribute>
+        </xsl:if>
+        <rico:hasOrHadAgentName>
+            <rico:AgentName>
+                <rico:textualValue>
+                    <xsl:value-of select="normalize-space(.)"/>
+                </rico:textualValue>
+            </rico:AgentName>
+        </rico:hasOrHadAgentName>
+    </rico:Family>
+</xsl:template>
+
+<xsl:template match="ead:geogname">
+    <rico:Place>
+        <xsl:if test="starts-with(@authfilenumber, 'http')">
+            <xsl:attribute name="rdf:about">
+                <xsl:value-of select="@authfilenumber"/>
+            </xsl:attribute>
+        </xsl:if>
+        <rico:hasOrHadPlaceName>
+            <rico:PlaceName>
+                <rico:textualValue>
+                    <xsl:value-of select="normalize-space(.)"/>
+                </rico:textualValue>
+            </rico:PlaceName>
+        </rico:hasOrHadPlaceName>
+    </rico:Place>
+</xsl:template>
+
+<xsl:template match="ead:genreform | ead:subject">
+    <rico:Thing>
+        <xsl:if test="starts-with(@authfilenumber, 'http')">
+            <xsl:attribute name="rdf:about">
+                <xsl:value-of select="@authfilenumber"/>
+            </xsl:attribute>
+        </xsl:if>
+        <rico:hasOrHadName>
+            <rico:Name>
+                <rico:textualValue>
+                    <xsl:value-of select="normalize-space(.)"/>
+                </rico:textualValue>
+            </rico:Name>
+        </rico:hasOrHadName>
+    </rico:Thing>
+</xsl:template>
+
+
+<!-- text organizing templates-->
 <xsl:template match="ead:p">
     <xsl:value-of select="normalize-space(.)"/>
+    <xsl:text> </xsl:text>
 </xsl:template>
+
+<!-- empty templates-->
+<xsl:template match="ead:address"/>
+<xsl:template match="ead:head"/>
 
 <!-- named templates -->
 <xsl:template name="set-recordsettype">
@@ -291,6 +380,5 @@
         </xsl:when>
     </xsl:choose>
 </xsl:template>
-
 
 </xsl:stylesheet>

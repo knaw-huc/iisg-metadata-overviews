@@ -2,10 +2,11 @@
 __pycache__/
 
 # Other gitrepo's
-archives/rico-converter/
 biblio/marc2bibframe2/
+authority/marcauth-to-madsrdf/
 
 # Data
 */status.db
 extracted/
 transformed/
+patched/
