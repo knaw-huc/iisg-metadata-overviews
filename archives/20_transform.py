@@ -3,9 +3,9 @@
 from pathlib import Path
 from saxonche import PySaxonProcessor
 
-testamount = 3
+import status_operations
 
-# TODO: base handling on status.db instead of the availability of the file in extracted!!! 
+amount = 0 # if 0, than all records are handled
 
 xsltproc = PySaxonProcessor(license=False).new_xslt30_processor()
 executable = xsltproc.compile_stylesheet(stylesheet_file="ead2rico/xsl/ead2rico.xslt")
@@ -18,5 +18,9 @@ for src_file in src_path.glob("**/*.xml"):
     executable.transform_to_file(source_file=str(src_file), output_file=str(out_file))
 
     print("written: " + str(out_file))
-    testamount = testamount - 1
-    if testamount == 0: break 
+    amount = amount - 1
+    if amount == 0: break 
+
+print('start updating status')
+status_operations.update_status_db('t')
+status_operations.print_status_db()

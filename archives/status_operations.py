@@ -1,6 +1,6 @@
 import sqlite3
 import os
-import datetime
+from datetime import datetime
 from pathlib import Path
 
 
@@ -12,16 +12,16 @@ def to_balanced_path(number: str, extension: str, n: int = 3) -> Path:
     return path
 
 
-def initiate_status_db():
-    con = sqlite3.connect("status.db") 
+def initiate_status_db(db: str = "status.db"):
+    con = sqlite3.connect(db) 
     cur = con.cursor()
     cur.execute("CREATE TABLE records (identifier, status, last_check, last_extraction, last_transformation, last_load);")
     con.commit()
     con.close()
 
 
-def print_status_db():
-    con = sqlite3.connect("status.db") 
+def print_status_db(db: str = "status.db"):
+    con = sqlite3.connect(db) 
     cur = con.cursor()
     cur.execute('SELECT COUNT(identifier) FROM records WHERE status="c"')
     print ("checked:     " + str(cur.fetchone()[0]) )
@@ -46,29 +46,50 @@ def revert_status_db(status1: str, status2: str):
     con.close()
 
 
-def update_status_db(status: str):
-    status_dict = {'e': 'extracted', 't': 'transformed'}
-    path = status_dict[status] # add error handling!!
-    con = sqlite3.connect("status.db")
+def update_status_db(status: str, db: str = "status.db"):
+    # TBD: use pathlib?
+    con = sqlite3.connect(db)
     cur = con.cursor()
-    for root, subdirs, files in os.walk(path):
-        for filename in files:
-            file_path = os.path.join(root, filename)
-            identifier = filename.split('.')[0]
-            mtime = os.path.getmtime(file_path)
-            timestamp = datetime.datetime.fromtimestamp(mtime).isoformat()
-            record = (status, timestamp, identifier)
-            cur.execute('UPDATE records SET status = ?, last_extraction = ? WHERE identifier = ?', record)
-            con.commit()
-            print('status updated ' + str(record))
+    if status == 'c':
+        now = str(datetime.now())
+        record = (now,)
+        cur.execute('UPDATE records SET last_check = ?;', record)
+        con.commit()
+        print('status updated ' + str(record))
+    elif status == 'e':
+        path = 'extracted'
+        for root, subdirs, files in os.walk(path):
+            for filename in files:
+                file_path = os.path.join(root, filename)
+                identifier = filename.split('.')[0]
+                mtime = os.path.getmtime(file_path)
+                timestamp = datetime.datetime.fromtimestamp(mtime).isoformat()
+                record = (status, timestamp, identifier)
+                cur.execute('UPDATE records SET status = ?, last_extraction = ? WHERE identifier = ?', record)
+                con.commit()
+                print('status updated ' + str(record))
+    elif status == 't':
+        path = 'transformed'
+        for root, subdirs, files in os.walk(path):
+            for filename in files:
+                file_path = os.path.join(root, filename)
+                identifier = filename.split('.')[0]
+                mtime = os.path.getmtime(file_path)
+                timestamp = datetime.datetime.fromtimestamp(mtime).isoformat()
+                record = (status, timestamp, identifier)
+                cur.execute('UPDATE records SET status = ?, last_transformation = ? WHERE identifier = ?', record)
+                con.commit()
+                print('status updated ' + str(record))
+    else:
+        print('Error in function "update_status_db": Wrong statuscode: ' + status)
 
     con.close()
 
 
-def get_process_list_from_status_db(status: str):
+def get_process_list_from_status_db(status: str, db: str = "status.db"):
     # Get process_list of identifiers to be processed
     process_list = []
-    con = sqlite3.connect("status.db")
+    con = sqlite3.connect(db)
     cur = con.cursor()
     for row in cur.execute('SELECT identifier FROM records WHERE status=?', status):
         process_list.append(row[0])

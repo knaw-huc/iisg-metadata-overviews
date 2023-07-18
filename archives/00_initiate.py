@@ -7,16 +7,19 @@ from datetime import datetime
 
 import status_operations
 
-# Initialize an OAI interface
+# initialize
 sickle = Sickle('http://api.socialhistoryservices.org/solr/all/oai')
-response = sickle.ListIdentifiers(metadataPrefix='ead', set='iish.archieven', ignore_deleted=True)
+oai_payload = {'metadataPrefix': 'ead',
+               'set': 'iish.archieven' }
+db = "status_test.db"
+amount = 10 # if 0, than all records are handled
+status_operations.initiate_status_db(db = "status_test.db")
 
-con = sqlite3.connect("status.db") 
+con = sqlite3.connect(db) 
 cur = con.cursor()
 
-amount = 0 # if 0, than all records are handled
-
-# export records
+# find identifiers
+response = sickle.ListIdentifiers(**oai_payload)
 for record in response:
     root = etree.XML(str(record))
     identifier = root.findtext("{http://www.openarchives.org/OAI/2.0/}identifier")

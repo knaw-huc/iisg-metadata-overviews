@@ -12,7 +12,7 @@ oai_identifier_prefix = "oai:socialhistoryservices.org:10622/"
 
 sickle = Sickle(url)
 path = Path("extracted")
-testamount = 0 # if 0, than all records are handled
+amount = 0 # if 0, than all records are handled
 
 process_list = status_operations.get_process_list_from_status_db('c')
 
@@ -32,8 +32,10 @@ for identifier in process_list:
         with open(file, "w") as xmlfile:
             xmlfile.write(etree.tostring(record, pretty_print=True).decode('utf-8'))
         print("written: " + str(file))
-    testamount = testamount - 1
-    if testamount == 0: break 
+    amount = amount - 1
+    if amount == 0: break 
 
 print('done')
+print('start updating status')
+status_operations.update_status_db('e')
 status_operations.print_status_db()
