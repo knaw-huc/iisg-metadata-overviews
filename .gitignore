@@ -2,6 +2,7 @@
 __pycache__/
 
 # Other gitrepo's
+archives/ead2rico/
 biblio/marc2bibframe2/
 authority/marcauth-to-madsrdf/
 
