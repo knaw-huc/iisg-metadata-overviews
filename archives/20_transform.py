@@ -5,7 +5,7 @@ from saxonche import PySaxonProcessor
 
 import status_operations
 
-amount = 0 # if 0, than all records are handled
+amount = 10 # if 0, than all records are handled
 
 xsltproc = PySaxonProcessor(license=False).new_xslt30_processor()
 executable = xsltproc.compile_stylesheet(stylesheet_file="ead2rico/xsl/ead2rico.xslt")
@@ -22,5 +22,5 @@ for src_file in src_path.glob("**/*.xml"):
     if amount == 0: break 
 
 print('start updating status')
-status_operations.update_status_db('t')
+# status_operations.update_status_db('t')
 status_operations.print_status_db()
