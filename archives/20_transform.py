@@ -5,7 +5,7 @@ from saxonche import PySaxonProcessor
 
 import status_operations
 
-amount = 10 # if 0, than all records are handled
+amount = 0 # if 0, than all records are handled
 
 xsltproc = PySaxonProcessor(license=False).new_xslt30_processor()
 executable = xsltproc.compile_stylesheet(stylesheet_file="ead2rico/xsl/ead2rico.xslt")

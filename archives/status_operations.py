@@ -35,14 +35,14 @@ def print_status_db(db: str = "status.db"):
     print('----')
 
 
-def revert_status_db(status1: str, status2: str):
+def set_status_db(status1: str, status2: str):
     # Changes status1 into status2
     con = sqlite3.connect("status.db")
     cur = con.cursor()
     tupel = (status2, status1)
     cur.execute('UPDATE records SET status = ? WHERE status = ?', tupel)
     con.commit()
-    print('status ' + status1 + ' reverted into ' + status2)
+    print('status ' + status1 + ' set into ' + status2)
     con.close()
 
 
@@ -63,7 +63,7 @@ def update_status_db(status: str, db: str = "status.db"):
                 file_path = os.path.join(root, filename)
                 identifier = filename.split('.')[0]
                 mtime = os.path.getmtime(file_path)
-                timestamp = datetime.datetime.fromtimestamp(mtime).isoformat()
+                timestamp = datetime.fromtimestamp(mtime).isoformat()
                 record = (status, timestamp, identifier)
                 cur.execute('UPDATE records SET status = ?, last_extraction = ? WHERE identifier = ?', record)
                 con.commit()
@@ -75,7 +75,7 @@ def update_status_db(status: str, db: str = "status.db"):
                 file_path = os.path.join(root, filename)
                 identifier = filename.split('.')[0]
                 mtime = os.path.getmtime(file_path)
-                timestamp = datetime.datetime.fromtimestamp(mtime).isoformat()
+                timestamp = datetime.fromtimestamp(mtime).isoformat()
                 record = (status, timestamp, identifier)
                 cur.execute('UPDATE records SET status = ?, last_transformation = ? WHERE identifier = ?', record)
                 con.commit()
