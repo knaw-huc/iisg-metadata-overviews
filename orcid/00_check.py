@@ -9,7 +9,7 @@ import status_operations
 amount = 0 # if 0, than all records are handled
 
 # export records
-file_name = "identifiers.csv"
+file_name = "to_extract.csv"
 
 status_operations.initiate_status_db()
 
