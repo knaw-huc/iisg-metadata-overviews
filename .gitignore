@@ -1,6 +1,10 @@
 # Byte-compiled
 __pycache__/
 
+
+# Old stuff
+old/
+
 # Other gitrepo's
 archives/ead2rico/
 biblio/marc2bibframe2/
@@ -8,6 +12,8 @@ authority/marcauth-to-madsrdf/
 
 # Data
 */status.db
+monitored/
 extracted/
-transformed/
+extracted_old/
 patched/
+transformed/

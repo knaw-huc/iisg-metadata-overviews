@@ -1,12 +1,5 @@
 # IISG CETL Archives
 
-Principles: 
-* All scripts are independent. You could run them in random order. Sometimes because the transformation script changed, sometimes because the data changed, sometimes both.
-* If a script aborts inexpectately, the chain should not be broken. Calling it a new, makes it pick up were it left off.
-* be generous with data storage so you could study all in between steps
-* NOT: performance
-* NOT: on-the-fly synchronization
-
 ## Monitor
 See on the OAI-PMH endpoint whether changes are made to the data. Write a list of new data-records in `monitored/to_extract.txt`.
 
@@ -19,13 +12,13 @@ Transforms the extracted data in `extracted/` into RDF (from EAD to RiC-O) and w
 ### ead2rico
 XSLT stylesheets used to transform.
 
-## Loader
-Shell script building a zip-file from the files in `transformed/`. The zip-file can be uploaded to druid (for now manually, automate it in the future)
+## Future work
 
-## future work
-Write a script `cleaner.py` that checks and cleans the bookkeeping
+### Needed additions
+* Write a script `cleaner.py` that checks and cleans the bookkeeping
+* Write a script to upload the result to a triple store, create a HDT file or something
 
-## Potential additions
+### Potential additions
 * validator.py
 * patcher.py
 

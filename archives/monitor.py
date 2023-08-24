@@ -39,4 +39,5 @@ for record in response:
     print(identifier_oai)
     amount = amount - 1
     if amount == 0: break
+
 print('done')
