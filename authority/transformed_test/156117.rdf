@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:marc="http://www.loc.gov/MARC21/slim"
+          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+          xmlns:sdo="https://schema.org/">
+   <rdf:Description rdf:about="https://iisg.amsterdam/authority/NotDeterminedYet/156117">
+      <sdo:sameAs rdf:resource="http://id.loc.gov/authorities/subjects/sh85026379"/>
+      <rdf:type rdf:resource="https://schema.org/DefinedTerm"/>
+      <sdo:name>Human rights</sdo:name>
+      <sdo:alternateName>Basic human rights</sdo:alternateName>
+      <sdo:alternateName>Torture</sdo:alternateName>
+      <sdo:alternateName>Political murders</sdo:alternateName>
+      <sdo:alternateName>Human rights violation</sdo:alternateName>
+      <sdo:alternateName>Disappearances</sdo:alternateName>
+      <sdo:alternateName>Capital punishment</sdo:alternateName>
+      <sdo:alternateName>Political prisoners</sdo:alternateName>
+      <sdo:alternateName>Law</sdo:alternateName>
+      <sdo:alternateName>Solidarity movements</sdo:alternateName>
+   </rdf:Description>
+</rdf:RDF>

@@ -1,0 +1,21 @@
+<marc:record xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns="http://www.openarchives.org/OAI/2.0/" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+  <marc:leader>00205nz  a2200097o  45 0</marc:leader>
+  <marc:controlfield tag="001">27700</marc:controlfield>
+  <marc:controlfield tag="003">NL-AMISG</marc:controlfield>
+  <marc:controlfield tag="005">20021205191805.0</marc:controlfield>
+  <marc:controlfield tag="008">021205n| acannaabn |n anc d</marc:controlfield>
+  <marc:datafield tag="035" ind2=" " ind1=" ">
+    <marc:subfield code="a">(IISG)IISGa10105012</marc:subfield>
+  </marc:datafield>
+  <marc:datafield ind1=" " tag="040" ind2=" ">
+    <marc:subfield code="a">IISG</marc:subfield>
+    <marc:subfield code="c">IISG</marc:subfield>
+  </marc:datafield>
+  <marc:datafield ind2=" " tag="151" ind1=" ">
+    <marc:subfield code="a">Diest (Belgium)</marc:subfield>
+  </marc:datafield>
+  <marc:datafield ind1=" " tag="901" ind2=" ">
+    <marc:subfield code="c">27700</marc:subfield>
+    <marc:subfield code="t">authority</marc:subfield>
+  </marc:datafield>
+</marc:record>

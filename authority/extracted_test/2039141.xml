@@ -1,0 +1,23 @@
+<marc:record xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns="http://www.openarchives.org/OAI/2.0/" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+  <marc:leader>00208nz  a22     o  4500</marc:leader>
+  <marc:controlfield tag="001">2039141</marc:controlfield>
+  <marc:controlfield tag="003">NL-AMISG</marc:controlfield>
+  <marc:controlfield tag="005">20220221072518.0</marc:controlfield>
+  <marc:controlfield tag="008">      ||||||||||||||||||||||||||||||||||</marc:controlfield>
+  <marc:datafield ind2=" " tag="035" ind1=" ">
+    <marc:subfield code="a">(VIAF)40784377 (</marc:subfield>
+  </marc:datafield>
+  <marc:datafield ind2=" " tag="040" ind1=" ">
+    <marc:subfield code="a">NL-AmISG</marc:subfield>
+    <marc:subfield code="c">NL-AmISG</marc:subfield>
+  </marc:datafield>
+  <marc:datafield tag="100" ind1="1" ind2=" ">
+    <marc:subfield code="a">Gardiner, G.</marc:subfield>
+    <marc:subfield code="q">(Grace),</marc:subfield>
+    <marc:subfield code="d">1845?-1919.</marc:subfield>
+  </marc:datafield>
+  <marc:datafield ind2=" " tag="901" ind1=" ">
+    <marc:subfield code="c">2039141</marc:subfield>
+    <marc:subfield code="t">authority</marc:subfield>
+  </marc:datafield>
+</marc:record>

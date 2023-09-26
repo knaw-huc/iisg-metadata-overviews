@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:marc="http://www.loc.gov/MARC21/slim"
+          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+          xmlns:sdo="https://schema.org/">
+   <rdf:Description rdf:about="https://iisg.amsterdam/authority/person/2039141">
+      <sdo:sameAs rdf:resource="http://viaf.org/viaf/40784377"/>
+      <rdf:type rdf:resource="https://schema.org/Person"/>
+      <sdo:name>Gardiner, G.</sdo:name>
+   </rdf:Description>
+</rdf:RDF>
