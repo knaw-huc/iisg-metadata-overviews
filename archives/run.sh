@@ -16,7 +16,7 @@ echo "Transform data"
 echo "-----"
 echo "Compress data"
 zip -r archives.zip extracted/
-mv orcid.zip extracted/
+mv archives.zip extracted/
 
 echo "-----"
 echo "Ready"

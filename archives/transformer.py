@@ -7,7 +7,7 @@ from saxonche import PySaxonProcessor
 amount = 0 # if 0, than all records are handled
 
 xsltproc = PySaxonProcessor(license=False).new_xslt30_processor()
-executable = xsltproc.compile_stylesheet(stylesheet_file="ead2rico/xsl/ead2rico.xslt")
+executable = xsltproc.compile_stylesheet(stylesheet_file="ead2rico/xsl/ead2rico.xsl")
 
 # Potential improvement: only run transformation if:
 # max last_mod_date in ead2rico/ > last_mod_date of the result in transformed/
