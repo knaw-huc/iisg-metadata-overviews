@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# Extracts records from OAI-PMH endpoint based on list identifiers in to_extract.txt
 
 import urllib.request
 from pathlib import Path
@@ -34,14 +33,16 @@ def oai_request(endpoint: str, payload: dict):
 
 
 def find_youngest_file_date(path: Path):
-    last_mod_date = "2000-01-01" # default
-    for file in path.glob("**/*.xml"):
-        mtime = file.stat().st_mtime
-        file_last_mod_date = str(datetime.fromtimestamp(mtime).isoformat().split('T')[0])
-        if last_mod_date < file_last_mod_date:
-            last_mod_date = file_last_mod_date
+    if path.exists():
+        for file in path.glob("**/*.xml"):
+            mtime = file.stat().st_mtime
+            file_last_mod_date = str(datetime.fromtimestamp(mtime).isoformat().split('T')[0])
+            if last_mod_date < file_last_mod_date: last_mod_date = file_last_mod_date
+    else:
+        last_mod_date = "2000-01-01" # default
 
     return last_mod_date
+
 
 # initialize
 oai_endpoint          = "http://api.socialhistoryservices.org/solr/all/oai"
@@ -53,7 +54,9 @@ ext_path              = Path("extracted")
 NS                    = { "oai": "http://www.openarchives.org/OAI/2.0/",
                           "marc": "http://www.loc.gov/MARC21/slim" }
 
-oai_payload["from"] = find_youngest_file_date(ext_path)
+from_date = find_youngest_file_date(ext_path)
+if from_date != '2000-01-01':
+    oai_payload["from"] = from_date
 
 while True:
 

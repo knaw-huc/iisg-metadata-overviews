@@ -15,12 +15,13 @@ def to_balanced_path(number: str, extension: str, n: int = 3) -> Path:
 base_uri        = 'https://orcid.org/'
 headers         = {'accept': 'application/ld+json'}
 ext_path        = Path("extracted")
-to_extract_file = open("monitored/to_extract.txt", "r")
 
-# read process_list from to_extract.txt
+# TODO: create a processlist with the needed orcids
+# options: 
+# - get them from wikidata
+# - use the ORCID API?
+# - get them from Pure?
 process_list = []
-for line in to_extract_file:
-    process_list.append(line.rstrip())
 
 # content negotiate data from the URIs contructed from the identifiers in process_list
 for identifier in process_list:

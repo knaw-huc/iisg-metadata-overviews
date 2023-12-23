@@ -1,24 +1,21 @@
-# authority
-This CETL: 
-0. Checks which records are created, updated or deleted.
-1. Extracts bibliographical data from Evergreen through the socialhistory.org OAI-PMH in MarcXML format.
-2. Transforms data into BIBFRAME with the XSLT library of marc2bibframe2 from the LoC
-3. Loads the result into TriplyDB (?)
+# IISG CETL Authority
 
-## Pattern
-The pipeline is managed through a database 'status.db' with identifiers needed to download the records identified with these identifiers. The check-step finds the newly created, updated or deleted identifiers, stores the status of the processing and the timestamps of the moments the record is checked, extracted, transformed and loaded.
+## Extractor
+Gets the data from the OAI-PMH endpoint and writes it in `extracted`. This is done incrementally, based on the youngest date of change in a file in 'extracted'.
 
-## Check
-The check script creates and updates the list of identifiers to be downloaded with the OAI-PMH verb ListIdentifiers. 
+## Transformer
+Transforms the extracted data in `extracted/` into RDF (from MARC to Schema.org) and writes it in `transformed/`.
 
-## Extract
-With the identifiers in the status.db we download the records record by record with the OAI-PMH verb GetRecord. This circumvents the timeouts we experience on the endpoint: if the download stops, we do not need to start from beginning but continue were we left off. 
+### auth2sdo.xsl
+XSLT stylesheets used to transform.
 
-The downloaded data is stored in files, a file for every record, named with the number of the identifier. Because the number of records is huge (1.2 million) we store them in a balanced directory structure based on the last three digits of the (numerical) identifier.
+## Future work
 
-## Transform
-TBD
+### Needed additions
+* Write a script to upload the result to a triple store, create a HDT file or something
 
-## Load
-TBD
+### Potential additions
+* validator.py
+* patcher.py
 
+Both writing yet another directory (called 'validated' and 'patched' respectively) with files.
