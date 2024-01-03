@@ -33,13 +33,12 @@ def oai_request(endpoint: str, payload: dict):
 
 
 def find_youngest_file_date(path: Path):
+    last_mod_date = "2000-01-01" # default
     if path.exists():
         for file in path.glob("**/*.xml"):
             mtime = file.stat().st_mtime
             file_last_mod_date = str(datetime.fromtimestamp(mtime).isoformat().split('T')[0])
             if last_mod_date < file_last_mod_date: last_mod_date = file_last_mod_date
-    else:
-        last_mod_date = "2000-01-01" # default
 
     return last_mod_date
 
