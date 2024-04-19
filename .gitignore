@@ -17,3 +17,4 @@ extracted/
 extracted_old/
 patched/
 transformed/
+.DS_Store

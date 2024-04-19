@@ -1,60 +1,20 @@
-# CETL
+# IISG metadata overviews
 
-*NEEDS UPDATING AFTER REFACTORING*
+The purpose of this repository is to harvest and convert the archival and bibliographic metadata from the International Institute of Social History (IISG) (originating from the open OAI-endpoint) to a csv file, which can be used to create overviews, queries and reports.
 
-Principles: 
-* All scripts are independent. You could run them in random order. Sometimes because the transformation script changed, sometimes because the data changed, sometimes both.
-* If a script aborts unexpectately, the chain should not be broken. Calling it a new, makes it pick up were it left off.
-* be generous with data storage ('cache') so you could study all steps
-* NOT: performance
-* NOT: on-the-fly synchronization
+These overviews serve the purpose of providing insights into the metadata, which can be used for: retrospective cleaning to improve consistency, understanding the contents (unique values, data type(s)) of a given MARC field, among others.
 
-These scripts: 
+The tasks that can be done with this code are:
+1. Harvest the OAI metadata endpoints (from XML to an initial tabular format) (1)
+2. Converting the output of the initial tabular format to a readable .csv in which each row represents a "record" and each column represents a property (MARC field/subfield)
+3. Generating overviews of the existing fields and their contents.
+4. Querying the content of specific Marc field(s) (unique values, data types, etc.), 
 
-0. Monitor which records are created, updated or deleted.
-1. Extract metadata from a collection management system.
-2. Transform data into RDF
-3. Load the result into an appropriate databasesystem
+The main users of this repository are the cataloguer(s) of the IISG.
 
-For instance: for biblio it Monitors via the ListIdentifiers verb of OAI-PMH which bibliographical records are changed in Evergreen, Extracts the metadata with a GetRecord request on the OAI-PMH endpoint, Transforms it into RDF (TBD: test the BIBFRAME transformations of the LoC) and finally uploads the data into TriplyDB.
+## Mentions of responsibility
+- This repository is a fork of the original repository to harvest and generate the initial tabular format, created by Ivo Zandhuis (https://github.com/ivozandhuis/iisg-cetl).
+- Some parts of the harvesting and initial converter scripts were improved based on suggestions from Rik Hoekstra and Stefan Klut (KNAW Humanities Cluster).
 
-Other example: for ORCID a list of all the relevant ORCIDs is manually composed, Extracts the data via content negotiation on orcid.org, (does not need to transform, because it is already RDF) and creates a zip-file with the records that can be uploaded into Druid (TBD: access Druid through the API)
-
-## Pattern
-The pipeline is managed through a database 'status.db' with identifiers needed to download the records identified with these identifiers. The check-step finds the newly created, updated or deleted identifiers, stores the status of the processing and the timestamps of the moments the record is checked, extracted, transformed and loaded.
-
-## Prerequisites
-The scripts run in Python3 and need the following libraries:
-- sqlite3
-- os
-- datetime
-- pathlib
-- csv
-- json
-- requests
-- Sickle (OAI-PMH library)
-
-Other git repo's with code needed to run the cetls:
-- rico-converter
-- marc2bibframe2
-
-## Check
-The check script creates and updates the list of identifiers to be downloaded, for instance with the OAI-PMH verb ListIdentifiers. 
-
-todo:
-* how to update this list
-
-## Extract
-With the identifiers in the status.db we download the records record by record, for instance with the OAI-PMH verb GetRecord or content negotiation. 
-
-The downloaded data is stored in files, a file for every record, named with the number of the identifier. Because the number of records could be huge (eg 1.2 million for the bibliographical data) we store them in a balanced directory structure based on the last three digits of the (numerical) identifier.
-
-todo:
-* how to incrementally update the data (instead of downloading everything everytime)
-
-## Transform
-TBD
-
-## Load
-TBD
-
+--
+(1) More information here: https://iisg.amsterdam/en/collections/using/machine-access?back-link=1. This code uses these OAI (Open Archives Initiative Protocol for Metadata Harvesting) end point: http://api.socialhistoryservices.org/solr/all/oai"
