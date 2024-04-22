@@ -12,6 +12,43 @@ The tasks that can be done with this code are:
 
 The main users of this repository are the cataloguer(s) of the IISG.
 
+## Instructions
+
+Download the Github repository to your own computer.
+
+Run the scripts (they run independently), in this order:
+
+1. Select which metadata source (folder) you want to work with:
+- Archives: this is the metadata (in MARCXML format) of the ca. 5000 records from the IISG. 
+    - For example, this record's metadata will be entirely harvested: https://api.socialhistoryservices.org/solr/all/oai?verb=GetRecord&identifier=oai:socialhistoryservices.org:10622/ARCH00001&metadataPrefix=marcxml
+    - That same record can be viewed in the IISG catalog viewer: https://hdl.handle.net/10622/ARCH00001 (or: https://search.iisg.amsterdam/Record/ARCH00001)
+    - That same record can also be viewed in its linked open data format at the IISG sparql endpoint: https://iisg.amsterdam/id/collection/ARCH00001.
+    - The metadata is only descriptive (i.e., at the record level), the archival finding aids are not (yet) included.
+- Authority: this is the metadata (in MARCXML format) of the ca. 600.000 records from authorities (e.g., person names, place names, uniform titles) from the IISG.
+    - For example, this record's metadata will be entirely harvested: http://api.socialhistoryservices.org/solr/all/oai?verb=GetRecord&metadataPrefix=marcxml&identifier=oai:socialhistoryservices.org:iish.evergreen.authority:571330
+    - That same record cannot be viewed in the IISG catalog viewer.
+    - That same record cannot be viewed (yet) in its linked open data format at the IISG sparql endpoint.
+- Biblio: this is the metadata (in MARCXML format) of the more than 1 million records from the bibliographic collections of the IISG.
+    - For example, this record's metadata will be entirely harvested: https://api.socialhistoryservices.org/solr/all/oai?verb=GetRecord&identifier=oai:socialhistoryservices.org:1292895&metadataPrefix=marcxml
+    - That same record can be viewed in the IISG catalog viewer: https://search.iisg.amsterdam/Record/1292895
+    - That same record can also be viewed in its linked open data format at the IISG sparql endpoint: https://iisg.amsterdam/id/item/1292895.
+
+2. Run the script "extractor.py" located inside the folder of interest
+- This will automatically create a folder ./extracted
+- All records will be downloaded to that folder in MARCXML format. This may take a couple of hours (longer for Biblio) depending on several factors.
+- This folder is ignored in the version control system (it's added to .gitignore), thus, it will be only stored in your local repository.
+- The script will print "done" when the harvesting is ready.
+
+3. Run the script "transformer.py" located inside the folder of interest
+- This script will transform each record in the ./extracted to a tabular format in which each Marc label is in one row together with the record's identifier. 
+- For example, this is how the first three lines from this MARCXML record https://search.iisg.amsterdam/Record/1292895 look like after transforming them:
+- All records will be stored in a folder ./transformed which is created automatically and ignored in the version control system (.gitignore)
+
+4. Run the script "converter.py" located inside the folder of interest
+- This script will convert each record in the ./transformed folder to a tabular format in which each record is in one row and each property (MARC field and subfield) is in one column
+- The output of this format is a single .csv file which will be located in the ./converted folder created automatically.
+
+
 ## Mentions of responsibility
 - This repository is a fork of the original repository to harvest and generate the initial tabular format, created by Ivo Zandhuis (https://github.com/ivozandhuis/iisg-cetl).
 - Some parts of the harvesting and initial converter scripts were improved based on suggestions from Rik Hoekstra and Stefan Klut (KNAW Humanities Cluster).
