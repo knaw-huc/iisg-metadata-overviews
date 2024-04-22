@@ -2,19 +2,10 @@
 __pycache__/
 
 
-# Old stuff
-old/
-
-# Other gitrepo's
-archives/ead2rico/
-biblio/marc2bibframe2/
-authority/marcauth-to-madsrdf/
-
 # Data
 */status.db
-monitored/
-extracted/
-extracted_old/
-patched/
-transformed/
 .DS_Store
+venv/
+archives/data/
+authority/data/
+biblio/data/
