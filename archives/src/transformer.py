@@ -6,7 +6,7 @@ from pathlib import Path # iterates through all files
 from lxml import etree
 import pandas as pd
 import time # to measure how long the process takes
-import os # to create folder
+import os # to define paths to folders
 
 # register start time
 start_time = time.time()

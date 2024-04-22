@@ -6,7 +6,7 @@ from pathlib import Path
 from lxml import etree
 from datetime import datetime
 import time # to measure how long the process takes
-import os # to create folder
+import os # to define paths to folders
 
 
 def to_balanced_path(number: str, extension: str, n: int = 3) -> Path:
