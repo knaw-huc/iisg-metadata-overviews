@@ -6,6 +6,7 @@ __pycache__/
 */status.db
 .DS_Store
 venv/
-archives/data/
-authority/data/
-biblio/data/
+archives/src/.ipynb_checkpoints/archive_query-checkpoint.ipynb
+*.csv
+*.xml
+jupyter_notebooks/.ipynb_checkpoints/archive_query-checkpoint.ipynb
