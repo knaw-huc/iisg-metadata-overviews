@@ -1,9 +1,13 @@
 #!/usr/bin/python3
+# script written by Ivo Zandhuis (https://github.com/ivozandhuis/iisg-cetl)
 
 import urllib.request
 from pathlib import Path
 from lxml import etree
 from datetime import datetime
+import time # to measure how long the process takes
+import os # to create folder
+
 
 def to_balanced_path(number: str, extension: str, n: int = 3) -> Path:
     # credit for this idea: https://www.linkedin.com/in/martijnschiedon
@@ -42,16 +46,27 @@ def find_youngest_file_date(path: Path):
 
     return last_mod_date
 
-
 # initialize
+start_time = time.time() # to store time of start
+
+# SET DATA DIRECTORIES
+# this is the local path to the raw data in your own computer to where you downloaded/cloned the repository
+# warning: the folders should be empty when starting this script
+data_directory = os.path.abspath(os.path.join('..', 'data'))
+data_extracted_directory = os.path.join(data_directory, 'extracted')
+data_transformed_directory = os.path.join(data_directory, 'transformed')
+data_converted_directory = os.path.join(data_directory, 'converted')
+
+
+# HARVESTER
 oai_endpoint          = "http://api.socialhistoryservices.org/solr/all/oai"
 oai_identifier_prefix = "oai:socialhistoryservices.org:10622/"
 oai_payload           = { 'verb': 'ListRecords',
-                            'metadataPrefix': 'ead',
+                            'metadataPrefix': 'marcxml',
                             'set': 'iish.archieven' }
-ext_path              = Path("extracted")
+ext_path                = Path(data_extracted_directory)
 NS                    = { "oai": "http://www.openarchives.org/OAI/2.0/",
-                          "ead": "urn:isbn:1-931666-22-9" }
+                          "marc": "http://www.loc.gov/MARC21/slim" }
 
 
 from_date = find_youngest_file_date(ext_path)
@@ -76,7 +91,7 @@ while True:
     for resource in resources:
         status = resource.find("oai:header", namespaces=NS).get('status')
         if status == 'deleted': continue
-        record = resource.find("oai:metadata//ead:ead", namespaces=NS)
+        record = resource.find("oai:metadata//marc:record", namespaces=NS)
         oai_identifier = resource.find("oai:header/oai:identifier", namespaces=NS).text
         identifier = oai_identifier.partition(oai_identifier_prefix)[2]
         file = ext_path.joinpath(to_balanced_path(identifier, '.xml', 6))
@@ -90,4 +105,14 @@ while True:
         oai_payload["resumptionToken"] = resumption_token_element.text
     else: break
 
+# END
+end_time = time.time() # to store at what time it ended
+total_time = end_time - start_time
+ 
 print('done')
+print("total_time:", total_time, "sec.")
+
+## CHECK CORRECTNESS: move to the ..data/extracted folder and use this command in the terminal to count number of records: 
+# find . -type f | wc -l
+## the number of records should be ca.5400.
+## for an exact number, see the counter at the bottom of the OAI call: https://api.socialhistoryservices.org/solr/all/oai?verb=ListRecords&metadataPrefix=marcxml&set=iish.archieven
