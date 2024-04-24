@@ -23,6 +23,7 @@ data_converted_directory = os.path.join(data_directory, 'converted')
 
 # register start time
 start_time = time.time()
+print('Note that this takes time, approx. 3454.99 sec.')
 
 # read csv as dataframe (path to the .csv file in the ./transformed folder)
 # low_memory=False is needed because DtypeWarning: Columns (0) have mixed types"
