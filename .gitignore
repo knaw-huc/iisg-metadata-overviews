@@ -13,3 +13,4 @@ authority/data
 *.xml
 jupyter_notebooks/.ipynb_checkpoints/archive_query-checkpoint.ipynb
 archives/src/.ipynb_checkpoints/archive_query-checkpoint.ipynb
+biblio/src/.ipynb_checkpoints/biblio_query-checkpoint.ipynb
