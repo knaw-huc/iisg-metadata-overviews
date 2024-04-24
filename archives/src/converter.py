@@ -26,7 +26,7 @@ start_time = time.time()
 
 # read csv as dataframe (path to the .csv file in the ./transformed folder)
 # low_memory=False is needed because DtypeWarning: Columns (0) have mixed types"
-archives_df_v1 = pd.read_csv(f'{data_transformed_directory}/archives.csv', sep="\t", header=None, names=['id','marc_field','value'], compression='gzip', low_memory=False)
+archives_df_v1 = pd.read_csv(f'{data_transformed_directory}/archives.gzip', sep="\t", header=None, names=['id','marc_field','value'], compression='gzip', low_memory=False)
 
 # drop the first row because it contains the old column names
 archives_df_v2 = archives_df_v1.iloc[1:]
@@ -54,7 +54,7 @@ archives_df_v5 = archives_df_v4.fillna("null")
 # make a copy
 archives_df = archives_df_v5.reset_index(drop=True).copy()
 
-archives_df.to_csv(f'{data_converted_directory}/archives_as_csv.csv', sep = '\t', index = False, compression = 'gzip')
+archives_df.to_csv(f'{data_converted_directory}/archives_as_csv.gzip', sep = '\t', index = False, compression = 'gzip')
 
 # print(archives_df_v5.head(100))
 
