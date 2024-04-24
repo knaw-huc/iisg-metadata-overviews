@@ -48,7 +48,7 @@ for src_file in ext_path.glob("**/*.xml"): # for every file in extracted folder 
 
 # create directory and store file
 result_df = pd.DataFrame.from_dict(dictionaries_list)
-result_df.to_csv(f"{data_transformed_directory}/archives.csv", sep = '\t', index = False, compression = 'gzip')
+result_df.to_csv(f"{data_transformed_directory}/archives.gzip", sep = '\t', index = False, compression = 'gzip')
 
 # register end time
 end_time = time.time()
