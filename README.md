@@ -1,8 +1,11 @@
 # IISG metadata overviews
 
-The purpose of this repository is to harvest and convert the archival and bibliographic metadata from the International Institute of Social History (IISG) (originating from the open OAI-endpoint) to a csv file, which can be used to create overviews, queries and reports.
+***"In a world deluged by data, it's not just the "data people" who need to be empowered; it's everyone in your organization (...). Because not only can you manage your data; you can turn it into your superpower."***
+*Data quality frequently makes the list of top concerns for data teams (...). From data engineers to data consumers, teams only benefit from high-quality data when they can access and understand it.* (https://data.world)
 
-These overviews serve the purpose of providing insights into the metadata, which can be used for: retrospective cleaning to improve consistency, understanding the contents (unique values, data type(s)) of a given MARC field, among others.
+The purpose of this repository is to provide overviews of the metadata of the International Institute of Social History (IISG) with the aim to support the cataloguers in improving its consistency and quality.
+
+The repository includes a harvester which fetches the metadata describing the IISG bibliographic and archival collections from the public OAIPMH endpoint (https://api.socialhistoryservices.org/) built and maintained by the KNAW Humanities Cluster Digital Infrastructure Department. Once the data is fetched, a script converts it to a csv file, which is uploaded into a Jupyter notebook, that can be used by the cataloguers to create overviews, queries and reports. These overviews serve the purpose of providing insights into the metadata, which can be used for: retrospective cleaning to improve consistency, understanding the contents (unique values, data type(s)) of a given MARC field, among others.
 
 The tasks that can be done with this code are:
 1. Harvest the OAI metadata endpoints (from XML to an initial tabular format) (1)
@@ -10,7 +13,7 @@ The tasks that can be done with this code are:
 3. Generating overviews of the existing fields and their contents.
 4. Querying the content of specific Marc field(s) (unique values, data types, etc.), 
 
-The main users of this repository are the cataloguer(s) of the IISG.
+The main users of this repository are the cataloguer(s) of the IISG. For general users of the IISG's metadata, there are other systems for searching and querying, such as: https://iisg.amsterdam, https://druid.datalegend.net/IISG/iisg-kg and https://datasets.iisg.amsterdam/.
 
 ## Instructions
 
