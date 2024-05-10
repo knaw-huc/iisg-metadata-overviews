@@ -1,7 +1,7 @@
 # IISG metadata overviews
 
-***"In a world deluged by data, it's not just the "data people" who need to be empowered; it's everyone in your organization (...). Because not only can you manage your data; you can turn it into your superpower."***
-*Data quality frequently makes the list of top concerns for data teams (...). From data engineers to data consumers, teams only benefit from high-quality data when they can access and understand it.* (https://data.world)
+- ***"In a world deluged by data, it's not just the "data people" who need to be empowered; it's everyone in your organization (...). Because not only can you manage your data"***
+- *Data quality frequently makes the list of top concerns for data teams (...). From data engineers to data consumers, teams only benefit from high-quality data when they can access and understand it.* (https://data.world)
 
 The purpose of this repository is to provide overviews of the metadata of the International Institute of Social History (IISG) with the aim to support the cataloguers in improving its consistency and quality.
 
