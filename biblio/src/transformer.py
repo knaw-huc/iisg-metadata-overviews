@@ -12,6 +12,7 @@ import os # to define paths to folders
 start_time = time.time()
 print("Note that this script takes approx. 2,5 hours to run")
 
+
 # SET DATA DIRECTORIES
 # this is the local path to the raw data in your own computer to where you downloaded/cloned the repository
 # warning: the folders should be empty when starting this script
@@ -20,9 +21,12 @@ data_extracted_directory = os.path.join(data_directory, 'extracted')
 data_transformed_directory = os.path.join(data_directory, 'transformed')
 data_converted_directory = os.path.join(data_directory, 'converted')
 
-amount = 0 # if 0, than all records are handled (this is for testing purposes, for not testing make it 0.
+amount = 0 # if 0, than all records are handled (this is for testing purposes, for not testing make it 10 or something else.
 
 ext_path = Path(data_extracted_directory) # these are where the files are located
+# create directory
+os.mkdir(data_transformed_directory)
+# create dataframe
 result_df = pd.DataFrame(columns = ['tcn', 'marcfield', 'value'])
 
 # Extract relevant elements from each XML file and store them
@@ -49,6 +53,7 @@ for src_file in ext_path.glob("**/*.xml"): # for every file in extracted folder 
 
 # create directory and store file
 result_df = pd.DataFrame.from_dict(dictionaries_list)
+# os.mkdir(data_transformed_directory)
 result_df.to_csv(f"{data_transformed_directory}/biblio.gzip", sep = '\t', index = False, compression = 'gzip')
 
 # register end time
