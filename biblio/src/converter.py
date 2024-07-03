@@ -21,6 +21,9 @@ data_extracted_directory = os.path.join(data_directory, 'extracted')
 data_transformed_directory = os.path.join(data_directory, 'transformed')
 data_converted_directory = os.path.join(data_directory, 'converted')
 
+# create directory
+os.mkdir(data_converted_directory)
+
 # register start time
 start_time = time.time()
 print("Note that this script takes approx. 1 hour to run")
