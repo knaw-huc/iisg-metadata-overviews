@@ -14,5 +14,3 @@ authority/data
 jupyter_notebooks/.ipynb_checkpoints/archive_query-checkpoint.ipynb
 archives/src/.ipynb_checkpoints/archive_query-checkpoint.ipynb
 biblio/src/.ipynb_checkpoints/biblio_query-checkpoint.ipynb
-.idea/iisg-metadata-overviews.iml
-authority/src/.ipynb_checkpoints/authority_query-checkpoint.ipynb
