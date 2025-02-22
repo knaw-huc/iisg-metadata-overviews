@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# script written by Ivo Zandhuis (https://github.com/ivozandhuis/iisg-cetl)
+
 
 import urllib.request
 from pathlib import Path
@@ -48,16 +50,37 @@ def find_youngest_file_date(path: Path):
 # initialize
 start_time = time.time() # to store time of start
 
-# SET DATA DIRECTORIES
+#################### SET DATA DIRECTORIES ##################
+# switch between 'biblio', 'archive', 'authority', 'subjects' depending on what source you want to extract the metadata from
+data_source = 'authority'
+
+################# COMMON TO ALL DATA SOURCES ##################
 # this is the local path to the raw data in your own computer to where you downloaded/cloned the repository
 # warning: the folders should be empty when starting this script
-data_directory = os.path.abspath(os.path.join('..', 'data'))
+script_dir = os.getcwd()  # Gets the current working directory
+project_root = os.path.abspath(os.path.join(script_dir, "..", ".."))  # Moves up two levels to reach 'repo'
+data_directory = os.path.join(project_root, "data", f"{data_source}")
 data_extracted_directory = os.path.join(data_directory, 'extracted')
 data_transformed_directory = os.path.join(data_directory, 'transformed')
 data_converted_directory = os.path.join(data_directory, 'converted')
 
+# MESSAGE WARNING WHERE YOU ARE HARVESTING
+print(f'Currently you are harvesting the OAI-PMH XML files in {data_source}')
 
-# HARVESTER
+
+############################# HARVESTERS PER DATA SOURCE (COMMENT/UNCOMMENT DEPENDING ON SOURCE ######################
+
+############################## HARVESTER FOR ARCHIVE
+# oai_endpoint          = "http://api.socialhistoryservices.org/solr/all/oai"
+# oai_identifier_prefix = "oai:socialhistoryservices.org:10622/"
+# oai_payload           = { 'verb': 'ListRecords',
+#                             'metadataPrefix': 'marcxml',
+#                             'set': 'iish.archieven' }
+# ext_path                = Path(data_extracted_directory)
+# NS                    = { "oai": "http://www.openarchives.org/OAI/2.0/",
+#                           "marc": "http://www.loc.gov/MARC21/slim" }
+
+############################## HAVESTER FOR AUTHORITY
 oai_endpoint          = "http://api.socialhistoryservices.org/solr/all/oai"
 oai_identifier_prefix = "oai:socialhistoryservices.org:iish.evergreen.authority:"
 oai_payload           = { 'verb': 'ListRecords',
@@ -67,6 +90,18 @@ ext_path              = Path(data_extracted_directory)
 NS                    = { "oai": "http://www.openarchives.org/OAI/2.0/",
                           "marc": "http://www.loc.gov/MARC21/slim" }
 
+# # ############################## HARVESTER FOR BIBLIO
+# # # oai_endpoint          = "http://api.socialhistoryservices.org/solr/all/oai"
+# # # oai_identifier_prefix = "oai:socialhistoryservices.org:"
+# # # oai_payload           = { 'verb': 'ListRecords',
+# # #                           'metadataPrefix': 'marcxml',
+# # #                           'set': 'iish.evergreen.biblio' }
+# # # ext_path              = Path(data_extracted_directory)
+# # # NS                    = { "oai": "http://www.openarchives.org/OAI/2.0/",
+# # #                           "marc": "http://www.loc.gov/MARC21/slim" }
+
+########################################################################################
+# #################################### COMMON TO ALL DATA SOURCES #####################
 from_date = find_youngest_file_date(ext_path)
 if from_date != '2000-01-01':
     oai_payload["from"] = from_date
@@ -79,7 +114,7 @@ while True:
         print("OAI error")
         break
 
-    try: 
+    try:
         root = etree.XML(response)
     except:
         print("Parse error XML")
@@ -106,11 +141,15 @@ while True:
 # END
 end_time = time.time() # to store at what time it ended
 total_time = end_time - start_time
- 
+
 print('done')
 print("total_time:", total_time, "sec.")
 
-## CHECK CORRECTNESS: move to the ..data/extracted folder and use this command in the terminal to count number of records: 
+## CHECK CORRECTNESS: move to the ..data/extracted folder and use this command in the terminal to count number of records:
 # find . -type f | wc -l
-## the number of records should be ca.5400.
-## for an exact number, see the counter at the bottom of the OAI call: http://api.socialhistoryservices.org/solr/all/oai?verb=ListRecords&metadataPrefix=marcxml&set=iish.evergreen.authority
+## the number of records should be:
+# ca.5400 for archive
+# ca. for biblio
+# ca. for authority
+## for an exact number, see the counter at the bottom of the OAI call: https://api.socialhistoryservices.org/solr/all/oai?verb=ListRecords&metadataPrefix=marcxml&set=iish.archieven
+

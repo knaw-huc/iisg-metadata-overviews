@@ -1,6 +1,24 @@
 #!/usr/bin/python3
 # Transforms files in /extracted/ from MARCXML into CSV
-# Original script by Ivo Zandhuis, with adaptations to improve running time by Liliana Melgar (based on suggestions from Rik Hoekstra and Stefan Klut)
+# Original script by Ivo Zandhuis, with adaptations to improve running time by Liliana Melgar
+# (based on suggestions from Rik Hoekstra and Stefan Klut)
+# NOTE: this script transforms the extracted XML files to a format that separates the subfields in columns, for example:
+# the record with TCN: 1021749 will be transformed to 233 columns, in which each line has a marc field with its
+# subfield and its value, for example, these are two lines in the format produced by this script for that record:
+# 1021749	6500	(OCoLC)fst00902077
+# 1021749	650a	Poor
+# 1021749	650x	Government policy.
+# 1021749	6502	fast
+# 1021749	6500	(OCoLC)fst01071075
+# 1021749	650a	Poor women
+# 1021749	650x	Government policy.
+# Once these transformed data is processed by the "converter.py", the result will be:
+
+# This format is useful if you want to get an idea of how many fields and subfields exist in a data source, but it's not
+# optimal if the purpose is to keep together the content of all the subfields within a field together,
+# # for example, if a field
+# has three subfields and is repeated twice, you won't know which subfield belonged to which of the repeated fields.
+# If it's important to preserve the order of subfields per occurrence, use the script: "transformer_per_field.py"
 
 from pathlib import Path # iterates through all files
 from lxml import etree
@@ -10,18 +28,35 @@ import os # to define paths to folders
 
 # register start time
 start_time = time.time()
+print("Note that this script takes approx. 2,5 hours to run")
 
-# SET DATA DIRECTORIES
+
+#################### SET DATA DIRECTORIES ##################
+# switch between 'biblio', 'archive', 'authority', 'subjects' depending on what source you want to extract the metadata from
+data_source = 'authority'
+format_converted = 'per_subfield' # check documentation at the beginning of this script
+
+################# COMMON TO ALL DATA SOURCES ##################
 # this is the local path to the raw data in your own computer to where you downloaded/cloned the repository
 # warning: the folders should be empty when starting this script
-data_directory = os.path.abspath(os.path.join('..', 'data'))
+script_dir = os.getcwd()  # Gets the current working directory
+project_root = os.path.abspath(os.path.join(script_dir, "..", ".."))  # Moves up two levels to reach 'repo'
+data_directory = os.path.join(project_root, "data", f"{data_source}")
 data_extracted_directory = os.path.join(data_directory, 'extracted')
 data_transformed_directory = os.path.join(data_directory, 'transformed')
 data_converted_directory = os.path.join(data_directory, 'converted')
 
-amount = 0 # if 0, than all records are handled (this is for testing purposes, for not testing make it 0.
+# MESSAGE WARNING WHERE YOU ARE HARVESTING
+print(f'Currently you are transforming the extracted files from {data_source} using {format_converted}')
+
+
+######################## COMMON TO ALL DATA SOURCES ##################################################################
+amount = 0 # if 0, than all records are handled (this is for testing purposes, for not testing make it 10 or something else.
 
 ext_path = Path(data_extracted_directory) # these are where the files are located
+# create directory
+os.mkdir(data_transformed_directory)
+# create dataframe
 result_df = pd.DataFrame(columns = ['tcn', 'marcfield', 'value'])
 
 # Extract relevant elements from each XML file and store them
@@ -48,7 +83,8 @@ for src_file in ext_path.glob("**/*.xml"): # for every file in extracted folder 
 
 # create directory and store file
 result_df = pd.DataFrame.from_dict(dictionaries_list)
-result_df.to_csv(f"{data_transformed_directory}/archives.gzip", sep = '\t', index = False, compression = 'gzip')
+# os.mkdir(data_transformed_directory)
+result_df.to_csv(f"{data_transformed_directory}/{data_source}_{format_converted}.gzip", sep = '\t', index = False, compression = 'gzip')
 
 # register end time
 end_time = time.time()
