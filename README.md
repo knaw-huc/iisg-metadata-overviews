@@ -1,4 +1,4 @@
-# IISG metadata overviews
+# IISG metadata overviews (read.me is a little bit outdated... it will be updated soon!)
 
 - ***"In a world deluged by data, it's not just the "data people" who need to be empowered; it's everyone in your organization"***
 - *Data quality frequently makes the list of top concerns for data teams (...). From data engineers to data consumers, teams only benefit from high-quality data when they can access and understand it.* (https://data.world)
