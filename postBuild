@@ -1,0 +1,19 @@
+#!/bin/bash
+# postBuild
+
+# Create target directory BIBLIO
+mkdir -p data/biblio/downloads
+# Download the large file directly into the repo structure
+# Note the /download at the end of the link!
+wget -q -O data/biblio/downloads/subjects_600_subfields_20250928-103109.csv https://surfdrive.surf.nl/files/index.php/s/YGltAZVFb6sDVWu/download
+
+
+# create directory AUTHORITY
+mkdir -p data/authority/downloads
+# read file and move it to directory
+wget -q -O data/authority/downloads/subjects_authority_150_subfields_20250929-075346.csv https://surfdrive.surf.nl/files/index.php/s/9WGSl2ZwkRUULDd/download
+
+# create directory POOLPARTY
+mkdir -p data/subjects/poolparty-thesaurus
+# read file and move it to directory
+wget -q -O data/subjects/poolparty-thesaurus/pp-project-socialhistorytaxonomy-nq_BasicColumns.csv https://surfdrive.surf.nl/files/index.php/s/2IoGLsagmBwtCJT/download
