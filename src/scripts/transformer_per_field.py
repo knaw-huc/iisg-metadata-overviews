@@ -14,7 +14,7 @@ print("Note that this script takes approx. 2,5 hours to run")
 
 #################### SET DATA DIRECTORIES ##################
 # switch between 'biblio', 'archive', 'authority', 'subjects' depending on what source you want to extract the metadata from
-data_source = 'authority'
+data_source = 'biblio'
 format_converted = 'per_field' # check documentation at the beginning of this script
 
 ################# COMMON TO ALL DATA SOURCES ##################
@@ -43,38 +43,52 @@ result_df = pd.DataFrame(columns = ['tcn', 'marcfield', 'value'])
 # Extract relevant elements from each XML file and store them
 dictionaries_list = []
 
+# store failed records
+failed_files = []  # keep track of which records couldn't be processed
+
 for src_file in ext_path.glob("**/*.xml"): # for every file in extracted folder take all files ending in xml in directories and subdirectories
-    record = etree.parse(src_file) # read the source file (xml) into an etree object
-    tcn = record.find("{http://www.loc.gov/MARC21/slim}controlfield[@tag = '001']").text #find the tcn (Id) in the file using method "find", element controlfield with attribute tag equivalent to 001. Text extracts the value. This is an element defined in the MARC schema (namespace definition is used)
-    leader = record.find("{http://www.loc.gov/MARC21/slim}leader")
-    dictionary1 = {'tcn' : tcn, 'marcfield' : 'leader', 'value' : leader.text}
-    dictionaries_list.append(dictionary1)
-    for controlfield in record.findall(".//{http://www.loc.gov/MARC21/slim}controlfield"): #get a line for every field
-        tag = controlfield.get("tag")
-        dictionary2 = {'tcn' : tcn, 'marcfield' : tag, 'value' : controlfield.text}
-        dictionaries_list.append(dictionary2)
-    for datafield in record.findall(".//{http://www.loc.gov/MARC21/slim}datafield"):
-        tag = datafield.get("tag")
-        subfield_values = []  # To collect all subfield values for this datafield
-        for subfield in datafield:
-            code = subfield.get("code")
-            value = subfield.text
-            # print(value)
-            subfield_values.append(f'"{code}":{value}')  # Format each subfield as "code":value
-            # print(subfield_values)
-            # Combine the tag with subfields and print
-            # combined_subfields = ";".join(subfield_values)
-            # print(f"{tag};{combined_subfields}")
-            #     dictionary3 = {'tcn' : tcn, 'marcfield' : tag + code, 'value' : subfield.text, 'combined_subfields' : combined_subfields}
-        dictionary3 = {'tcn' : tcn, 'marcfield' : tag, 'value' : subfield_values}
-        # because fields have subfields, value becomes a list, which makes it more complex to work with later, here converting it to string
-        value_list = dictionary3['value']
-        value_list_to_string = "⑄".join(str(element) for element in value_list)
-        dictionary4 = {'tcn' : tcn, 'marcfield' : tag, 'value' : value_list_to_string}
-        # print(value_list_to_string)
-        dictionaries_list.append(dictionary4)
-    amount = amount - 1
-    if amount == 0: break
+    try:
+        record = etree.parse(src_file) # read the source file (xml) into an etree object
+
+        # try to extract tcn, but handle if it's missing
+        tcn_elem = record.find("{http://www.loc.gov/MARC21/slim}controlfield[@tag = '001']")
+        if tcn_elem is None or tcn_elem.text is None:
+            raise ValueError("Missing or empty controlfield 001")
+
+        tcn = tcn_elem.text
+        leader = record.find("{http://www.loc.gov/MARC21/slim}leader")
+        dictionary1 = {'tcn': tcn, 'marcfield': 'leader', 'value': leader.text if leader is not None else ""}
+        dictionaries_list.append(dictionary1)
+
+        for controlfield in record.findall(".//{http://www.loc.gov/MARC21/slim}controlfield"): #get a line for every field
+            tag = controlfield.get("tag")
+            dictionary2 = {'tcn': tcn, 'marcfield': tag, 'value': controlfield.text}
+            dictionaries_list.append(dictionary2)
+
+        for datafield in record.findall(".//{http://www.loc.gov/MARC21/slim}datafield"):
+            tag = datafield.get("tag")
+            subfield_values = [] # To collect all subfield values for this datafield
+            for subfield in datafield:
+                code = subfield.get("code")
+                value = subfield.text
+                subfield_values.append(f'"{code}":{value}')
+            value_list_to_string = "⑄".join(str(element) for element in subfield_values)
+            dictionary4 = {'tcn': tcn, 'marcfield': tag, 'value': value_list_to_string}
+            dictionaries_list.append(dictionary4)
+
+    except Exception as e:
+        failed_files.append((src_file.name, str(e)))
+        continue  # skip to the next file
+
+if failed_files:
+    print(f"\n⚠️ {len(failed_files)} files could not be processed:")
+    for fname, err in failed_files:
+        print(f"- {fname}: {err}")
+
+    # # Optional: save to a log file
+    # with open("failed_files.log", "w") as f:
+    #     for fname, err in failed_files:
+    #         f.write(f"{fname}\t{err}\n")
 
 # create directory and store file
 result_df = pd.DataFrame.from_dict(dictionaries_list)
